@@ -1,0 +1,22 @@
+trigger:
+ - main
+ 
+stages :        
+  - stage: arm_template_deploy
+    jobs:
+      - job: arm_template_deploy
+        steps:
+              - checkout: self
+ 
+              - task: AzureResourceManagerTemplateDeployment@3
+                inputs:
+                  deploymentScope: 'Resource Group'
+                  azureResourceManagerConnection: 'mediawikidemo'
+                  subscriptionId: 'Your-Subscription-ID'
+                  action: 'Create Or Update Resource Group'
+                  resourceGroupName: 'media-wiki-rg'
+                  location: 'eastus2'
+                  templateLocation: 'Linked artifact'
+                  csmFile: '$(System.DefaultWorkingDirectory)/template/Container-Instance-Registry.json'
+                  csmParametersFile: '$(System.DefaultWorkingDirectory)/template/Container-Instance-Registry.json'
+                  deploymentMode: 'Incremental'

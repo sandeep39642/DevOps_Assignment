@@ -1,0 +1,36 @@
+Trigger
+ - main
+
+pool:
+  name: Azure Pipelines
+steps:
+- task: CopyFiles@2
+  displayName: 'Copy Files to: $(build.artifactstagingdirectory)'
+  inputs:
+    SourceFolder: docker
+    TargetFolder: '$(build.artifactstagingdirectory)'
+
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish Pipeline Artifact'
+  inputs:
+    targetPath: docker
+    artifact: testdockerbuild
+
+- task: Docker@2
+      displayName: Build and push an image to container registry
+      inputs:
+        command: buildAndPush
+        repository: $(imageRepository)
+        dockerfile: $(dockerfilePath)
+        containerRegistry: $(dockerRegistryServiceConnection)
+        tags: |
+          $(tag)
+
+
+
+
+
+
+
+
+          
